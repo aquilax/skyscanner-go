@@ -5,12 +5,13 @@ import (
 	"testing"
 )
 
-func Test_getCacheQuotesURL(t *testing.T) {
+func Test_getCacheRequestURL(t *testing.T) {
 	testURL, _ := url.Parse("http://example.com/test/v1/")
 	type args struct {
 		u      *url.URL
+		path   []string
 		apiKey string
-		req    *CachedQuotesRequest
+		req    *CachedRequest
 	}
 	tests := []struct {
 		name string
@@ -21,8 +22,9 @@ func Test_getCacheQuotesURL(t *testing.T) {
 			"Test full request",
 			args{
 				u:      testURL,
+				path:   []string{"browsequotes", "v1.0"},
 				apiKey: "123",
-				req: &CachedQuotesRequest{
+				req: &CachedRequest{
 					"Country",
 					"Currency",
 					"Locale",
@@ -38,8 +40,9 @@ func Test_getCacheQuotesURL(t *testing.T) {
 			"Test empty Inbound Partual date request",
 			args{
 				u:      testURL,
+				path:   []string{"browsequotes", "v1.0"},
 				apiKey: "1234",
-				req: &CachedQuotesRequest{
+				req: &CachedRequest{
 					"Country",
 					"Currency",
 					"Locale",
@@ -54,8 +57,8 @@ func Test_getCacheQuotesURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getCacheQuotesURL(tt.args.u, tt.args.apiKey, tt.args.req); got != tt.want {
-				t.Errorf("getCacheQuotesURL() = %v, want %v", got, tt.want)
+			if got := getCachedRequestURL(tt.args.u, tt.args.path, tt.args.apiKey, tt.args.req); got != tt.want {
+				t.Errorf("getCachedRequestURL() = %v, want %v", got, tt.want)
 			}
 		})
 	}
