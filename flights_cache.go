@@ -16,6 +16,9 @@ const browseRoutesVersion = "v1.0"
 const browseDatesPath = "browsedates"
 const browseDatesVersion = "v1.0"
 
+const browseDatesGridPath = "browsegrid"
+const browseDatesGridVersion = "v1.0"
+
 type CachedRequest struct {
 	Country             string
 	Currency            string
@@ -134,6 +137,7 @@ type CachedRoutesResponse struct {
 }
 
 // GetCachedRoutes Retrieves the cheapest routes from cache prices.
+//
 // ref: https://skyscanner.github.io/slate/#browse-routes
 func (ss *SkyScanner) GetCachedRoutes(req *CachedRequest) (*CachedRoutesResponse, error) {
 	url := getCachedRequestURL(ss.u, []string{
@@ -155,7 +159,9 @@ func (ss *SkyScanner) GetCachedRoutes(req *CachedRequest) (*CachedRoutesResponse
 type CachedDatesResponse struct{}
 
 // GetCachedDates retrieves the cheapest dates for a given route from cache.
+//
 // Deprecated: The API currently refers to BrowseRoutes instead
+//
 // ref: https://skyscanner.github.io/slate/#browse-dates
 func (ss *SkyScanner) GetCachedDates(req *CachedRequest) (*CachedDatesResponse, error) {
 	return nil, fmt.Errorf("For this query please use the following service [BrowseRoutes]")
@@ -179,13 +185,15 @@ type CachedDatesGridResponse struct{}
 
 // GetCachedDatesGrid retrieves the cheapest dates for a given route from cache,
 // with the results formatted as a two-dimensional array to be easily displayed as a calendar.
+//
 // Deprecated: The API currently refers to BrowseRoutes instead
+//
 // ref: https://skyscanner.github.io/slate/#browse-dates-grid
 func (ss *SkyScanner) GetCachedDatesGrid(req *CachedRequest) (*CachedDatesGridResponse, error) {
 	return nil, fmt.Errorf("For this query please use the following service [BrowseRoutes]")
 	url := getCachedRequestURL(ss.u, []string{
-		browseDatesPath,
-		browseDatesVersion,
+		browseDatesGridPath,
+		browseDatesGridVersion,
 	}, ss.apiKey, req)
 	var content []byte
 	var err error

@@ -32,11 +32,17 @@ func New(rt http.RoundTripper, apiKey string) *SkyScanner {
 }
 
 func (ss *SkyScanner) fetchURL(url string) ([]byte, error) {
-	var err error
+	r, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+	r.Header.Add("Accept", "application/json")
+
 	var resp *http.Response
 	if resp, err = ss.client.Get(url); err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("HTTP Error: %d", resp.StatusCode)
