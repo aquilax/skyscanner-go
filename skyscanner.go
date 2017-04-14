@@ -22,9 +22,6 @@ type SkyScanner struct {
 // New creates new SkyScanner API
 func New(rt http.RoundTripper, apiKey string) *SkyScanner {
 	u, _ := url.Parse(APIBase)
-	q := u.Query()
-	q.Set(apiKey, apiKey)
-	u.RawQuery = q.Encode()
 	return &SkyScanner{
 		client: &http.Client{
 			Transport: rt,

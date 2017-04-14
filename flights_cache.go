@@ -72,7 +72,7 @@ type CacheQuotesResponse struct {
 	Currencies []Currency `json:"Currencies"`
 }
 
-func getCacheQuotesURL(u *url.URL, req *CachedQuotesRequest) string {
+func getCacheQuotesURL(u *url.URL, apiKey string, req *CachedQuotesRequest) string {
 	path := []string{
 		browseQuotesPath,
 		browseQuotesVersion,
@@ -86,12 +86,15 @@ func getCacheQuotesURL(u *url.URL, req *CachedQuotesRequest) string {
 	if req.InboundPartialDate != nil {
 		path = append(path, req.InboundPartialDate.String())
 	}
-	u.Path = u.Path + strings.Join(path, "/")
-	return u.String()
+	up, _ := url.Parse(strings.Join(path, "/"))
+	q := up.Query()
+	q.Set("apiKey", apiKey)
+	up.RawQuery = q.Encode()
+	return u.ResolveReference(up).String()
 }
 
 func (ss *SkyScanner) CacheQuotes(req *CachedQuotesRequest) (*CacheQuotesResponse, error) {
-	url := getCacheQuotesURL(ss.u, req)
+	url := getCacheQuotesURL(ss.u, ss.apiKey, req)
 	var content []byte
 	var err error
 	if content, err = ss.fetchURL(url); err != nil {
